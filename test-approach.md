@@ -23,13 +23,6 @@ dotnet run --project src/PaymentGateway.Api
 
 ## Design considerations and assumptions
 
-### The boilerplate had some issues I had to fix first
-
-The starting point had a few problems before I could even get to the actual requirements. `PostPaymentRequest` had `CardNumberLastFour` as an `int` on the request model which doesn't make sense — you need the full card number to send to the bank and to derive the last four from. `Cvv` was also an `int` which would silently drop leading zeros. The GET endpoint was returning `200 OK` with a null body when a payment wasn't found instead of 404. Fixed all of these before building on top.
-
-
----
-
 ### Validation
 
 I used FluentValidation for validation as the rules can be invoked before the controller actions are run.
@@ -90,16 +83,6 @@ The controller only decides what HTTP status code to return. All the payment log
 
 ---
 
-### Bank unavailable maps to 502, not Rejected
-
-When the bank simulator returns 503 (which it does for cards ending in 0), `BankClient` returns `null`. The controller sees `null` and returns `502 Bad Gateway`.
-
-This is intentional — a bank-side infrastructure failure is not the same as invalid input. The payment request was valid; the bank just couldn't process it. Returning `Rejected` here would be misleading.
-
-No payment record is stored in this case.
-
----
-
 ### Two test suites
 
 There are two test files:
@@ -109,3 +92,11 @@ There are two test files:
 **`PaymentsControllerIntegrationTests.cs`** — integration tests requires docker-compose up. Tagged `[Trait("Category", "Integration")]` so they can be excluded from a command line run.
 
 ---
+
+### What I kept simple on purpose
+
+No real database — the in-memory data store.
+
+No DDD or seperate architecture for core, common, presentation and infrastructure layers.
+
+No logging, opentelemetry, no polly resiliency.

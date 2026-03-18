@@ -11,8 +11,8 @@ public class PaymentsRepository
         Payments.Add(payment);
     }
 
-    public PostPaymentResponse Get(Guid id)
+    public Task<PostPaymentResponse?> GetAsync(Guid id)
     {
-        return Payments.FirstOrDefault(p => p.Id == id);
+        return Task.FromResult(Payments.FirstOrDefault(p => p.Id == id));
     }
 }

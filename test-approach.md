@@ -47,6 +47,7 @@ GBP was swapped out for JPY because it has no minor unit (no pence/cents equival
 
 As this is the payment gateway, there isn't any input conversion for decimal currencies as that is done by the merchant calling the endpoint.
 The inclusion of JPY alongside EUR and USD was to demonstrate the solution can minor and non minor currencies
+
 ---
 
 ### BankProcessor settings use IOptions with startup validation
